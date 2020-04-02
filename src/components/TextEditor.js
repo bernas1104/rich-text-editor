@@ -5,6 +5,8 @@ import { Slate, Editable, withReact, DefaultElement } from 'slate-react'
 
 import { Icon } from 'react-icons-kit';
 import { bold, italic, code, list, underline } from 'react-icons-kit/feather';
+import { quote } from 'react-icons-kit/ionicons/quote';
+import { ic_title } from 'react-icons-kit/md/ic_title';
 
 import { FormatToolbar, CustomEditor, serialize, deserialize } from './index';
 
@@ -24,6 +26,19 @@ const ListElement = props => {
     );
 }
 
+const QuoteElement = props => {
+    return (
+        <div className="quote-element">
+            <span className="quotation" >
+                <Icon icon={ quote } />
+            </span>
+            <q { ...props.attributes }>
+                { props.children }
+            </q>
+        </div>
+    );
+}
+
 const Leaf = props => {
     return (
         <span
@@ -32,6 +47,7 @@ const Leaf = props => {
                     fontWeight: props.leaf.bold ? 'bold' : 'normal',
                     fontStyle: props.leaf.italic ? 'italic': 'normal',
                     textDecoration: props.leaf.underline ? 'underline' : 'none',
+                    fontSize: props.leaf.title ? 32 : 14,
                 }}
         >
             {props.children}
@@ -57,6 +73,8 @@ const TextEditor = () => {
                 return <CodeElement {...props} />;
             case 'list':
                 return <ListElement {...props} />;
+            case 'quote':
+                return <QuoteElement {...props} />;
             default:
                 return <DefaultElement {...props} />;
         }
@@ -69,6 +87,15 @@ const TextEditor = () => {
     return (
         <Fragment>
             <FormatToolbar>
+                <button
+                    className="tooltip-icon-button"
+                    onPointerDown={(event) => {
+                        event.preventDefault();
+                        CustomEditor.toggleTitleMark(editor);
+                    }}
+                >
+                    <Icon icon={ ic_title } />
+                </button>
                 <button 
                     className="tooltip-icon-button"
                     onPointerDown={(event) => {
@@ -114,6 +141,15 @@ const TextEditor = () => {
                 >
                     <Icon icon={list} />
                 </button>
+                <button
+                    className="tooltip-icon-button"
+                    onPointerDown={(event) => { 
+                        event.preventDefault();
+                        CustomEditor.toggleQuoteBlock(editor);
+                    }}
+                >
+                    <Icon icon={quote} />
+                </button>
             </FormatToolbar>
             <Slate editor={editor} value={value} onChange={value => {
                     setValue(value);
@@ -150,6 +186,16 @@ const TextEditor = () => {
                                 case 'l': {
                                     event.preventDefault(); // Stops the character from being inserted
                                     CustomEditor.toggleListBlock(editor);
+                                    break;
+                                }
+                                case 'o': {
+                                    event.preventDefault();
+                                    CustomEditor.toggleQuoteBlock(editor);
+                                    break;
+                                }
+                                case 'h': {
+                                    event.preventDefault();
+                                    CustomEditor.toggleTitleMark(editor);
                                     break;
                                 }
                                 default:

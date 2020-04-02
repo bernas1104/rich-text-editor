@@ -33,5 +33,34 @@ code {
 }
 
 .tooltip-icon-button {
-  border: 0;
+  border: 1px solid #000;
+  border-radius: 2px;
+  padding: 10px 12px;
+  margin-right: -1px;
+  cursor: pointer;
+  background: none;
+}
+
+.quote-element {
+  padding-left: 20px;
+  border-left: 5px solid #b491c8;
+  background: #eaeaea;
+  max-width: 740px;
+  display: flex;
+  align-items: center;
+}
+
+.quotation svg {
+  width: 40px;
+  height: 40px;
+  fill: #b491c8;
+}
+
+q {
+  display: block;
+  padding: 20px;
+}
+
+q * {
+  font-style: italic;
 }

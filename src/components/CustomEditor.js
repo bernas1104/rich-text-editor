@@ -17,6 +17,14 @@ const CustomEditor = {
         return !!match;
     },
 
+    isQuoteBlockActive(editor) {
+        const [match] = Editor.nodes(editor, {
+            match: n => n.type === 'quote',
+        });
+
+        return !!match;
+    },
+
     isBoldMarkActive(editor) {
         const [match] = Editor.nodes(editor, {
             match: n => n.bold === true,
@@ -44,6 +52,15 @@ const CustomEditor = {
         return !!match;
     },
 
+    isTitleMarkActive(editor){
+        const [match] = Editor.nodes(editor, {
+            match: n => n.title === true,
+            universal: true
+        });
+
+        return !!match;
+    },
+
     toggleCodeBlock(editor){
         const isActive = this.isCodeBlockActive(editor);
 
@@ -60,6 +77,16 @@ const CustomEditor = {
         Transforms.setNodes(
             editor,
             { type: !isActive ? 'list' : 'normal' },
+            { match: n => Editor.isBlock(editor, n) }
+        );
+    },
+
+    toggleQuoteBlock(editor){
+        const isActive = this.isQuoteBlockActive(editor);
+
+        Transforms.setNodes(
+            editor,
+            { type: !isActive ? 'quote' : 'normal' },
             { match: n => Editor.isBlock(editor, n) }
         );
     },
@@ -91,6 +118,16 @@ const CustomEditor = {
         Transforms.setNodes(
             editor,
             { underline: !isActive ? true : false },
+            { match: n => Text.isText(n), split: true }
+        );
+    },
+
+    toggleTitleMark(editor){
+        const isActive = this.isTitleMarkActive(editor);
+
+        Transforms.setNodes(
+            editor,
+            { title: !isActive ? true : false },
             { match: n => Text.isText(n), split: true }
         );
     }
